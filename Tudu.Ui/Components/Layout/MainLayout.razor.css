@@ -9,7 +9,6 @@ main {
 }
 
 .top-row {
-    background-color: black;
     width: 100%;
     z-index: 2222;
     justify-content: space-between;
@@ -19,8 +18,9 @@ main {
     margin-bottom: 1.5rem;
     position: sticky;
     top: 0;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/*    backdrop-filter: blur(10px);*/
+    background-color: #181818; /* dark theme background */
+    border-bottom: 1px solid #26262b; /* subtle dark border */
 }
 
     .top-row ::deep a,
@@ -35,14 +35,14 @@ main {
         }
 
 .username {
-    color: floralwhite;
+    color: #eeeeee; /* dark theme text */
 }
 
 .logo {
     font-size: 1.6rem;
     text-align: center;
     font-stretch: expanded;
-    color: gold;
+    color: #fcdfc2; /* primary accent */
     margin: 0;
     font-weight: bold;
 }
@@ -57,8 +57,8 @@ main {
 .pfp-initial {
     width: 32px;
     height: 32px;
-    background-color: #DAF7A6;
-    color: #0b0a0a;
+    background-color: #fcdfc2; /* dark theme accent background */
+    color: #121212; /* dark theme primary foreground */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,7 +71,6 @@ main {
     .top-row {
         justify-content: space-between;
         padding: 0 1rem;
-        /* Account for mobile nav menu */
         margin-bottom: 5.5rem;
     }
 
@@ -130,7 +129,7 @@ main {
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: #3a3128; /* dark warning background */
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     display: none;

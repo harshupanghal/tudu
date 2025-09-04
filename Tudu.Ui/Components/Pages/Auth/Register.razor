@@ -145,23 +145,18 @@
         try
         {
             var file = e.File;
-
-            // Limit size (2 MB here)
             var resized = await file.RequestImageFileAsync(file.ContentType, 300, 300);
             var buffer = new byte[resized.Size];
             await resized.OpenReadStream(2_000_000).ReadAsync(buffer);
 
-            // Convert to base64 for preview
             PreviewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
 
-            // Save to wwwroot/uploads
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
             var savePath = Path.Combine(Env.WebRootPath, "uploads", fileName);
 
             await using var fs = new FileStream(savePath, FileMode.Create);
             await file.OpenReadStream(2_000_000).CopyToAsync(fs);
 
-            // Save path in DB (example)
             registerRequest.ProfilePicturePath = $"/uploads/{fileName}";
         }
         catch (Exception ex)

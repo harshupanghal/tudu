@@ -1,45 +1,43 @@
 ﻿/* ---------------------------
-   app.css — Subtle / Elegant
-   - Reduced brightness
-   - Animations only on landing hero elements
-   - Targeted, subtle transitions for interactive controls
+   app.css — Subtle / Elegant (Dark Theme)
+   - Colors updated to dark theme
+   - Layout, spacing, radius, shadows preserved
    --------------------------- */
-
 * {
     box-sizing: border-box;
 }
 
-/* Color system: muted, classy tones */
+/* Color system: muted, classy tones for dark theme */
 :root {
     /* Backgrounds */
-    --bg-primary: #0b0c18; /* deep charcoal-blue */
-    --bg-secondary: #0b1116; /* near-black */
+    --bg-primary: #121212;
+    --bg-secondary: #181818;
     --bg-tertiary: rgba(15, 18, 22, 0.88);
-    --bg-card: rgba(255, 255, 255, 0.02);
+    --bg-card: #181818;
     /* Text */
-    --text-primary: #eef3f6; /* soft off-white */
-    --text-secondary: #c7ced4; /* muted silver */
-    --text-muted: #97a3ad; /* neutral grey */
+    --text-primary: #eeeeee;
+    --text-secondary: #b4b4b4;
+    --text-muted: #636363;
     --text-accent: #ffffff;
-    /* Elegant accents (muted gold / soft teal / warm terracotta) */
-    --accent-primary: #b89f5a; /* muted gold */
-    --accent-primary-hover: #9f8744;
-    --accent-secondary: #b96e59; /* soft terracotta */
-    --accent-secondary-hover: #a65a48;
-    --accent-success: #7fbfa7; /* soft teal */
+    /* Elegant accents */
+    --accent-primary: #fcdfc2;
+    --accent-primary-hover: #f5e0c5;
+    --accent-secondary: #3a3128;
+    --accent-secondary-hover: #4b3c2f;
+    --accent-success: #7fbfa7;
     --accent-success-hover: #63a88f;
-    --accent-warning: #d6a86b; /* warm but muted */
-    --accent-danger: #cf7861; /* muted coral */
+    --accent-warning: #d6a86b;
+    --accent-danger: #cf7861;
     /* Borders & glass effects */
-    --border-subtle: rgba(255, 255, 255, 0.04);
-    --border-accent: rgba(184, 159, 90, 0.18);
-    --glass-bg: rgba(255, 255, 255, 0.02);
-    --glass-border: rgba(255, 255, 255, 0.06);
-    /* Shadows (soft) */
+    --border-subtle: #211f1a;
+    --border-accent: rgba(252, 223, 194, 0.18);
+    --glass-bg: #2b2b2b;
+    --glass-border: #484848;
+    /* Shadows (kept soft as before) */
     --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.14);
     --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.18);
     --shadow-lg: 0 6px 22px rgba(0, 0, 0, 0.22);
-    --shadow-glow: 0 0 18px rgba(184, 159, 90, 0.09);
+    --shadow-glow: 0 0 18px rgba(252, 223, 194, 0.09);
     /* Motion */
     --animation-duration: 0.6s;
     --animation-delay-base: 0.08s;
@@ -59,7 +57,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Targeted transitions for interactive elements only (no global transition) */
+/* Targeted transitions for interactive elements only */
 a, button, input, textarea, select, .nav-link, .btn-custom {
     transition: background-color 180ms var(--ease), color 160ms var(--ease), box-shadow 220ms var(--ease), transform 180ms var(--ease), border-color 160ms var(--ease);
 }
@@ -76,7 +74,7 @@ a, button, input, textarea, select, .nav-link, .btn-custom {
 }
 
 /* ----------------------------
-   Landing hero — animations kept here
+   Landing hero
    ---------------------------- */
 .landing-hero {
     min-height: 100vh;
@@ -87,10 +85,9 @@ a, button, input, textarea, select, .nav-link, .btn-custom {
     text-align: center;
     position: relative;
     overflow: hidden;
-    background: radial-gradient(circle at center top, rgba(184, 159, 90, 0.02) 0%, transparent 45%);
+    background: radial-gradient(circle at center top, rgba(252, 223, 194, 0.02) 0%, transparent 45%);
 }
 
-    /* Subtle background animation allowed only in landing hero */
     .landing-hero::before {
         content: '';
         position: absolute;
@@ -100,13 +97,13 @@ a, button, input, textarea, select, .nav-link, .btn-custom {
         animation: gentleGlow 6s ease-in-out infinite alternate;
     }
 
-/* Hero typography — keep the gentle reveal */
+/* Hero typography */
 .hero-title {
     font-size: clamp(3.5rem, 8vw, 6.2rem);
     font-weight: 300;
     margin: 0 0 1.1rem 0;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--accent-primary) 0%, rgba(241, 228, 172, 0.6) 60%);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, rgba(252, 223, 194, 0.6) 60%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -146,8 +143,8 @@ input, textarea, select {
     input:focus, textarea:focus, select:focus {
         outline: none;
         border-color: var(--accent-primary);
-        box-shadow: 0 0 0 3px rgba(184, 159, 90, 0.06);
-        background: rgba(255, 255, 255, 0.02);
+        box-shadow: 0 0 0 3px rgba(252, 223, 194, 0.06);
+        background: #2b2b2b;
     }
 
     input::placeholder, textarea::placeholder {
@@ -173,7 +170,7 @@ th, td {
 }
 
 th {
-    background: rgba(255, 255, 255, 0.02);
+    background: #181818;
     color: var(--text-secondary);
     font-weight: 600;
     font-size: 0.875rem;
@@ -190,7 +187,7 @@ tr:hover {
 }
 
 /* ----------------------------
-   Buttons — remove entrance animations; keep subtle hover
+   Buttons
    ---------------------------- */
 .btn-custom {
     padding: 0.75rem 1.75rem;
@@ -206,7 +203,7 @@ tr:hover {
     position: relative;
     backdrop-filter: blur(6px);
     white-space: nowrap;
-    opacity: 1; /* no entrance animation */
+    opacity: 1;
     transform: none;
 }
 
@@ -230,12 +227,12 @@ tr:hover {
 }
 
     .btn-secondary-custom:hover {
-        background: rgba(255, 255, 255, 0.03);
+        background: #2e2e2e;
         border-color: var(--accent-primary);
         transform: translateY(-2px);
     }
 
-/* Success / Warning / Danger buttons (subtle hover only) */
+/* Success / Warning / Danger buttons */
 .btn-success-custom {
     background: linear-gradient(135deg, var(--accent-success), var(--accent-success-hover));
     color: var(--bg-primary);
@@ -273,11 +270,11 @@ tr:hover {
 .btn-outline-custom {
     background: transparent;
     color: var(--accent-primary);
-    border: 1px solid rgba(184, 159, 90, 0.12);
+    border: 1px solid rgba(252, 223, 194, 0.12);
 }
 
     .btn-outline-custom:hover {
-        background: rgba(184, 159, 90, 0.06);
+        background: rgba(252, 223, 194, 0.06);
         color: var(--text-primary);
     }
 
@@ -308,7 +305,7 @@ button[type="submit"], .btn-submit {
     }
 
 /* ----------------------------
-   Features — remove the entrance animation (no fadeInUp) and keep gentle hover only
+   Features
    ---------------------------- */
 .features {
     display: flex;
@@ -324,7 +321,7 @@ button[type="submit"], .btn-submit {
     align-items: center;
     text-align: center;
     max-width: 160px;
-    opacity: 1; /* visible by default */
+    opacity: 1;
     transform: none;
 }
 
@@ -406,14 +403,14 @@ button[type="submit"], .btn-submit {
    Accessibility / Focus
    ---------------------------- */
 .btn-custom:focus {
-    outline: 2px solid rgba(184, 159, 90, 0.18);
+    outline: 2px solid rgba(252, 223, 194, 0.18);
     outline-offset: 2px;
 }
 
 input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(184, 159, 90, 0.06);
+    box-shadow: 0 0 0 3px rgba(252, 223, 194, 0.06);
 }
 
 /* Reduced motion respects user preference */
@@ -453,13 +450,13 @@ input:focus, textarea:focus, select:focus {
     width: 45px;
     height: 45px;
     object-fit: cover;
-    border: 2px solid rgba(184, 159, 90, 0.22);
+    border: 2px solid rgba(252, 223, 194, 0.22);
 }
 
 .pfp-initial {
     width: 35px;
     height: 35px;
-    background-color: rgba(184, 159, 90, 0.18);
+    background-color: rgba(252, 223, 194, 0.18);
     color: var(--text-primary);
     display: flex;
     justify-content: center;
