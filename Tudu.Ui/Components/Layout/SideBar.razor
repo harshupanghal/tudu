@@ -1,0 +1,72 @@
+﻿@rendermode InteractiveServer
+@attribute [Authorize]
+
+<div class="auto-hiding-nav-menu"
+     @onmouseover="ExpandNavMenu"
+     @onmouseout="CollapseNavMenu">
+    <nav class="nav-menu @(collapseNavMenu ? "collapsed" : "expand")">
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-links">
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            <i class="bi bi-house-door-fill nav-item-icon"></i>
+                            <span class="nav-item-text">Home</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/tasks/create">
+                            <i class="bi bi-plus-circle-fill nav-item-icon"></i>
+                            <span class="nav-item-text">Create Task</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/tasks">
+                            <i class="bi bi-list-check nav-item-icon"></i>
+                            <span class="nav-item-text">My Tasks</span>
+                        </NavLink>
+                    </div>
+                </div>
+                <div class="logout-section">
+                    <div class="nav-item">
+                        <NavLink class="nav-link logout-link" href="/auth/logout">
+                            <i class="bi bi-box-arrow-right nav-item-icon"></i>
+                            <span class="nav-item-text">Logout</span>
+                        </NavLink>
+                    </div>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                             <div class="nav-item">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            <i class="bi bi-house-door-fill nav-item-icon"></i>
+                            <span class="nav-item-text">Home</span>
+                        </NavLink>
+                    </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool isHovered = false;
+    
+    private void ExpandNavMenu()
+    {
+        isHovered = true;
+        if (collapseNavMenu) 
+        {
+            collapseNavMenu = false;
+        }
+    }
+    
+    private void CollapseNavMenu()
+    {
+        isHovered = false;
+        if (!collapseNavMenu) 
+        {
+            collapseNavMenu = true;
+        }
+    }
+}

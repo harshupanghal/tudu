@@ -1,0 +1,108 @@
+﻿@page "/auth/login"
+@using BlazorAuthNoIdentity
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@inject IUserService UserService
+@inject NavigationManager Navigation
+@using FluentValidation
+
+<div class="login-card mt-5">
+    <h3 class="text-center mb-4 " style="font-size: 2rem;">Login</h3>
+
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="login-alert @MessageClass" role="alert">
+            @Message
+        </div>
+    }
+
+    <EditForm Model="@loginRequest" method="Post" OnValidSubmit="@HandleLogin" FormName="@LoginForm">
+               <FluentValidationValidator />
+        @* <ValidationSummary style="color: var(--accent-danger); margin-bottom: 1.5rem; font-weight: 500;" /> *@
+  
+
+        <div class="mb-3">
+            <label class="form-label " style="color: var(--text-secondary);">Username</label>
+            <InputText @bind-Value="loginRequest.UserName" 
+                       class="input-custom" 
+                       placeholder="Enter your username" />
+            <ValidationMessage For="@(() => loginRequest.UserName)" class="text-danger small" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label " style="color: var(--text-secondary);">Password</label>
+            <InputText @bind-Value="loginRequest.Password" type="password" 
+                       class="input-custom" 
+                       placeholder="Enter your password" />
+            <ValidationMessage For="@(() => loginRequest.Password)" class="text-danger small" />
+        </div>
+
+        <div class="checkbox-group mb-3">
+    <InputCheckbox @bind-Value="RememberMe" id="rememberMe" class="checkbox-custom" />
+    <label for="rememberMe">Remember Me</label>
+</div>
+
+
+        <button type="submit" class="btn-custom btn-primary-custom w-100" disabled="@isLoading">
+            @if (isLoading)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span>Logging in...</span>
+            }
+            else
+            {
+                <span>Login</span>
+            }
+        </button>
+    </EditForm>
+
+    <div class="text-center mt-3">
+        <small class="text-muted text-white-50">
+            Don’t have an account? <a href="/auth/register" style="color: var(--accent-primary);">Register here</a>
+        </small>
+    </div>
+</div>
+
+
+@code {
+    private bool RememberMe = false;
+    private bool isLoading = false;
+
+    private string? Message;
+    private string MessageClass = "alert-info";
+    private const string LoginForm = "Login-Form";
+
+
+    [SupplyParameterFromForm(FormName = LoginForm)]
+    private LoginRequest loginRequest { get; set; } = new();
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    const string AuthScheme = "tudu-auth";
+
+    private async Task HandleLogin()
+        {
+        var result = await UserService.LoginAsync(loginRequest);
+        if (!result.Success)
+            {
+            Message = "Invalid credentials";
+            MessageClass = "alert-danger";
+            return;
+            }
+
+        LoggedInUserModel user = new LoggedInUserModel(result.Id, result.UserName,result.Email,result.ProfilePicturePath);
+
+        var claims = user.ToClaims();
+        var identity = new ClaimsIdentity(claims, AuthScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        var authProperties = new AuthenticationProperties
+                {
+                IsPersistent = RememberMe
+                };
+
+        await HttpContext.SignInAsync(AuthScheme,principal,authProperties);
+        Navigation.NavigateTo("/tasks", forceLoad: true); 
+    }
+}

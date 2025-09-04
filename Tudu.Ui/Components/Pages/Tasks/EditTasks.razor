@@ -1,0 +1,141 @@
+﻿@page "/tasks/edit/{TaskId:int}"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using System.Security.Claims
+@using Tudu.Application.Dtos
+@using Tudu.Application.Interfaces
+@inject IUserTaskService UserTaskService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+@inject SweetAlertService Swal;
+
+<div style="max-width:600px; margin: 5rem auto; background: var(--bg-card); padding: 2.5rem; border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-subtle);">
+    <h3 style="color: var(--text-primary); margin-bottom: 2rem; text-align: center; font-weight: 600;">Edit Task</h3>
+
+    @if (taskDto == null)
+    {
+        <p style="text-align: center; color: var(--text-secondary);">Loading task...</p>
+    }
+    else
+    {
+        <EditForm Model="taskDto" OnValidSubmit="HandleValidSubmit" method="post" FormName="TaskEditForm">
+            <FluentValidationValidator />
+            <ValidationSummary style="color: var(--accent-danger); margin-bottom: 1.5rem; font-weight: 500;" />
+
+            <!-- Title -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Title</label>
+                <InputText @bind-Value="taskDto.Title"
+                           style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+            </div>
+
+            <!-- Description -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Description</label>
+                <InputTextArea @bind-Value="taskDto.Description"
+                               style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%; min-height: 100px; resize: vertical;" />
+            </div>
+
+            <!-- Due Date + Category -->
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+                <div style="flex: 1;">
+                    <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Due Date</label>
+                    <InputDate @bind-Value="taskDto.DueDate"
+                               style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+                </div>
+                <div style="flex: 1;">
+                    <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Category</label>
+                    <InputText @bind-Value="taskDto.Category"
+                               style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                <InputCheckbox @bind-Value="taskDto.IsCompleted" id="isCompleted" style="width: 18px; height: 18px; accent-color: var(--accent-success); cursor: pointer;" />
+                <label for="isCompleted" style="font-weight: 500; color: var(--text-primary); cursor: pointer;">Mark as Completed</label>
+            </div>
+
+            <!-- Reminder -->
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;">
+                <InputCheckbox @bind-Value="taskDto.HasReminder" id="hasReminder" style="width: 18px; height: 18px; accent-color: var(--accent-primary); cursor: pointer;" />
+                <label for="hasReminder" style="font-weight: 500; color: var(--text-primary); cursor: pointer;">Set a Reminder?</label>
+            </div>
+
+            @if (taskDto.HasReminder)
+            {
+                <div style="margin-bottom: 2rem;">
+                    <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Reminder Time</label>
+                    <!-- FIX: Use native input for datetime-local -->
+                    <input type="datetime-local"
+                           @bind="taskDto.ReminderTime"
+                           style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+                </div>
+            }
+
+            <!-- Buttons -->
+            <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="button" @onclick="NavigateBack"
+                        style="background: rgba(255, 255, 255, 0.08); color: var(--text-primary); border: 1px solid var(--border-subtle); padding: 0.875rem 2rem; border-radius: 25px; font-weight: 500; cursor: pointer;">
+                    Cancel
+                </button>
+                <button type="submit"
+                        style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: var(--bg-primary); border: none; padding: 0.875rem 2rem; border-radius: 25px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-md); font-size: 1rem;">
+                    Update Task
+                </button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int TaskId { get; set; }
+
+    private TaskUpdateDto? taskDto;
+    private int userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        userId =int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+            var existingTask = await UserTaskService.GetTaskByIdAsync(TaskId, userId);
+            if (existingTask != null)
+            {
+                taskDto = new TaskUpdateDto
+                {
+                    Id = existingTask.Id,
+                    Title = existingTask.Title,
+                    Description = existingTask.Description,
+                    DueDate = existingTask.DueDate,
+                    Category = existingTask.Category,
+                    IsCompleted = existingTask.IsCompleted,
+                    HasReminder = existingTask.HasReminder,
+                    ReminderTime = existingTask.ReminderTime
+                };
+            }
+        
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (taskDto != null)
+        {
+    //           if (taskDto.ReminderTime.HasValue)
+    // {
+    //     taskDto.ReminderTime = taskDto.ReminderTime.Value.ToUniversalTime();
+    // }
+            await UserTaskService.UpdateTaskAsync(taskDto, userId);
+            await Swal.FireAsync("Task updated Successfully");
+            Navigation.NavigateTo("/tasks");
+        }
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/tasks");
+    }
+}

@@ -1,0 +1,172 @@
+﻿@page "/auth/register"
+@rendermode InteractiveServer
+
+@using System.ComponentModel.DataAnnotations
+@using Tudu.Application.DTOs
+@using Tudu.Application.Interfaces
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+@using Microsoft.AspNetCore.Components.Forms
+@inject IWebHostEnvironment Env
+@using FluentValidation
+@inject SweetAlertService Swal;
+
+<div class="register-card mt-5" role="region" aria-label="Create account">
+    <h3 class="text-center mb-5" style="font-size: 2rem; color: var(--text-primary);">Create Your Account</h3>
+
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="register-alert @MessageClass" role="alert" aria-live="polite">
+            @Message
+        </div>
+    }
+
+    <EditForm Model="@registerRequest" method="Post" OnValidSubmit="HandleRegister" FormName="@RegiForm">
+        <FluentValidationValidator />
+        @* <ValidationSummary style="color: var(--accent-danger); margin-bottom: 1.5rem; font-weight: 500;" /> *@
+
+        <div class="mb-3">
+            <label for="email" class="form-label" style="color: var(--text-secondary);">Email</label>
+            <InputText id="email" @bind-Value="registerRequest.Email"
+                       class="input-custom" placeholder="Enter your email" aria-label="Email" />
+            <ValidationMessage For="@(() => registerRequest.Email)" style="color: var(--accent-danger); font-size: 0.875rem;" />
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label" style="color: var(--text-secondary);">Username</label>
+            <InputText id="username" @bind-Value="registerRequest.UserName"
+                       class="input-custom" placeholder="Enter a unique username" aria-label="Username" />
+            <ValidationMessage For="@(() => registerRequest.UserName)" style="color: var(--accent-danger); font-size: 0.875rem;" />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label" style="color: var(--text-secondary);">Password</label>
+            <InputText id="password" @bind-Value="registerRequest.Password" type="password"
+                       class="input-custom" placeholder="Choose a strong password" aria-label="Password" />
+            <ValidationMessage For="@(() => registerRequest.Password)" style="color: var(--accent-danger); font-size: 0.875rem;" />
+        </div>
+
+        <div class="mb-3">
+            <label for="profilePic" class="form-label" style="color: var(--text-secondary);">Profile picture (optional)</label>
+            <InputFile id="profilePic" OnChange="HandleFileSelected" accept="image/*" aria-label="Upload profile picture" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(PreviewUrl))
+        {
+            <div class="mb-3" aria-hidden="false">
+                <img src="@PreviewUrl" alt="Preview" class="pfp-img" style="width:150px;height:150px;border-radius:50%;" />
+            </div>
+        }
+
+        <button type="submit" class="btn-custom btn-primary-custom w-100" disabled="@isLoading" aria-busy="@isLoading" aria-label="Register">
+            @if (isLoading)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="width:1rem;height:1rem;border-width:0.15rem;"></span>
+                <span>Registering...</span>
+            }
+            else
+            {
+                <span>Register</span>
+            }
+        </button>
+    </EditForm>
+
+    <div class="text-center mt-3">
+        <small style="color: var(--text-muted);">
+            Already have an account? <a href="/auth/login" style="color: var(--accent-primary);">Login here</a>
+        </small>
+    </div>
+</div>
+
+@code {
+    private const string RegiForm = "Registration-Form";
+    private string? PreviewUrl;
+    [SupplyParameterFromForm(FormName = RegiForm)]
+    private RegisterRequest registerRequest { get; set; } = new();
+
+    private string? Message;
+    private string MessageClass = "alert-info";
+    private bool isLoading = false;
+    private CancellationTokenSource _cts = new();
+    private IBrowserFile? uploadedFile;
+
+    private async Task HandleRegister()
+    {
+        isLoading = true;
+        Message = null;
+
+        try
+        {
+            var result = await UserService.RegisterAsync(registerRequest);
+
+            if (result.Success)
+            {
+                // Message = " Registered successfully! Redirecting to login...";
+                // MessageClass = "alert-success";
+                StateHasChanged();
+                await Swal.FireAsync("Registered Successfully");
+
+                await Task.Delay(1500, _cts.Token);
+
+                if (!_cts.IsCancellationRequested)
+                {
+                    NavigationManager.NavigateTo("/auth/login", forceLoad: true);
+                }
+            }
+            else
+            {
+                Message = result.message ?? " Registration failed. Please check your details.";
+                MessageClass = "alert-warning";
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore cancellation due to navigation/disposal
+        }
+        catch (Exception ex)
+        {
+            Message = $"Unexpected error: {ex.Message}";
+            MessageClass = "alert-danger";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+
+            // Limit size (2 MB here)
+            var resized = await file.RequestImageFileAsync(file.ContentType, 300, 300);
+            var buffer = new byte[resized.Size];
+            await resized.OpenReadStream(2_000_000).ReadAsync(buffer);
+
+            // Convert to base64 for preview
+            PreviewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+            // Save to wwwroot/uploads
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
+            var savePath = Path.Combine(Env.WebRootPath, "uploads", fileName);
+
+            await using var fs = new FileStream(savePath, FileMode.Create);
+            await file.OpenReadStream(2_000_000).CopyToAsync(fs);
+
+            // Save path in DB (example)
+            registerRequest.ProfilePicturePath = $"/uploads/{fileName}";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Image upload failed: " + ex.Message);
+        }
+    }
+}

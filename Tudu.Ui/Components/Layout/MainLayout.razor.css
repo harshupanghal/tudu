@@ -1,0 +1,172 @@
+﻿.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.top-row {
+    background-color: black;
+    width: 100%;
+    z-index: 2222;
+    justify-content: space-between;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .top-row ::deep a,
+    .top-row ::deep .btn-link {
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+        .top-row ::deep a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+.username {
+    color: floralwhite;
+}
+
+.logo {
+    font-size: 1.6rem;
+    text-align: center;
+    font-stretch: expanded;
+    color: gold;
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Profile picture styles */
+.pfp-img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.pfp-initial {
+    width: 32px;
+    height: 32px;
+    background-color: #DAF7A6;
+    color: #0b0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .top-row {
+        justify-content: space-between;
+        padding: 0 1rem;
+        /* Account for mobile nav menu */
+        margin-bottom: 5.5rem;
+    }
+
+        .top-row ::deep a,
+        .top-row ::deep .btn-link {
+            margin-left: 0;
+        }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .pfp-img,
+    .pfp-initial {
+        width: 28px;
+        height: 28px;
+    }
+
+    .pfp-initial {
+        font-size: 12px;
+    }
+
+    .username {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 0 2rem;
+    }
+
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            width: 0;
+        }
+
+    article {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    article {
+        padding-left: 1.5rem !important;
+    }
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+/* Additional smooth transitions for interactive elements */
+.btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+/* Content area adjustments for mobile nav */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .content {
+        margin-left: 0;
+    }
+}

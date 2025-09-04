@@ -1,0 +1,45 @@
+﻿@page "/"
+<PageTitle>Tudu</PageTitle>
+
+<div class="landing-hero" role="region" aria-label="Landing hero">
+    <div class="content">
+        <h1 class="hero-title">Tudu</h1>
+
+        <p class="hero-subtitle">
+            Minimal. Powerful. Private.<br />
+            Organize your life with elegance.
+        </p>
+
+        <div class="btn-group-custom" aria-hidden="false">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="btn-custom btn-primary-custom" href="/tasks" aria-label="Go to my tasks">
+                        <span>Go to My Tasks</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="btn-custom btn-outline-custom" href="/auth/login" aria-label="Sign in">
+                        <span>Sign In</span>
+                    </a>
+                    @* <a class="btn-custom btn-secondary-custom" href="/auth/register">
+                        <span>Register</span>
+                       </a> *@
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <div class="features" role="list" aria-label="Key features">
+            <div class="feature" role="listitem">
+                <p class="feature-text">Private &amp; Secure</p>
+            </div>
+
+            <div class="feature" role="listitem">
+                <p class="feature-text">Fast &amp; Minimal</p>
+            </div>
+
+            <div class="feature" role="listitem">
+                <p class="feature-text">Stay Organized</p>
+            </div>
+        </div>
+    </div>
+</div>

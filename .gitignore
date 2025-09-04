@@ -1,0 +1,20 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build directories
+bin/
+obj/
+
+# Rider
+.idea/
+
+# DotNet Secret files
+secrets.json
+appsettings.Development.json
+
+# Optional: Mac/Linux
+*.DS_Store
