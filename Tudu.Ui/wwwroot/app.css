@@ -84,6 +84,7 @@ a, button, input, textarea, select, .nav-link, .btn-custom {
     align-items: center;
     text-align: center;
     position: relative;
+    top:-30px;
     overflow: hidden;
     background: radial-gradient(circle at center top, rgba(252, 223, 194, 0.02) 0%, transparent 45%);
 }
@@ -151,40 +152,7 @@ input, textarea, select {
         color: var(--text-muted);
     }
 
-/* ----------------------------
-   Tables
-   ---------------------------- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--bg-card);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-}
 
-th, td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-subtle);
-}
-
-th {
-    background: #181818;
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-td {
-    color: var(--text-primary);
-}
-
-tr:hover {
-    background: rgba(255, 255, 255, 0.015);
-}
 
 /* ----------------------------
    Buttons
