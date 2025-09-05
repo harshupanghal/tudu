@@ -14,9 +14,10 @@ namespace Tudu.Application.Validation
                 .MaximumLength(100).WithMessage("Title can't be longer than 100 characters.");
 
             RuleFor(t => t.DueDate)
-                .GreaterThan(DateTime.Now.AddMinutes(-1)).WithMessage("Due date must be in the future.");
+    .Must(BeInTheFuture)
+    .WithMessage("Due date and time must be in the future.");
 
-            RuleFor(t => t.Category)
+        RuleFor(t => t.Category)
                 .NotEmpty().WithMessage("Category is required.");
 
             When(t => t.HasReminder, () => {
@@ -25,6 +26,14 @@ namespace Tudu.Application.Validation
                     .GreaterThan(t => DateTime.Now.AddMinutes(-1)).WithMessage("Reminder time must be in the future.");
             });
             }
+
+        private bool BeInTheFuture(DateTime dueDate)
+            {
+            var now = DateTime.Now;
+            return dueDate >= now;
+            }
+
+
         }
 
     public class TaskUpdateDtoValidator : AbstractValidator<TaskUpdateDto>

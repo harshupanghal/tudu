@@ -1,0 +1,31 @@
+services:
+  tudu.ui:
+    image: ${DOCKER_REGISTRY-}tuduui
+
+    build:
+      context: .
+      dockerfile: Tudu.Ui/Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ConnectionStrings__TuduConnection=Server=db;Database=TuduDb;User Id=sa;Password=#Tudu@123;Encrypt=False;TrustServerCertificate=True;
+      - SENDGRIDSETTINGS__APIKEY=${SENDGRID_API_KEY}
+      - SENDGRIDSETTINGS__SENDEREMAIL=work.harshpanghal@gmail.com
+      - SENDGRIDSETTINGS__SENDERNAME=Tudu
+    depends_on:
+      - db
+
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "#Tudu@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+      - ./uploads:/app/wwwroot/uploads
+
+volumes:
+  sql-data:

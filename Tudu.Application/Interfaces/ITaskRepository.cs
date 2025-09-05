@@ -1,6 +1,4 @@
-﻿// Application/Interfaces/ITaskRepository.cs
-
-using Tudu.Domain.Entities;
+﻿using Tudu.Domain.Entities;
 
 namespace Tudu.Application.Interfaces;
 

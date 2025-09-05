@@ -32,7 +32,7 @@ public class ReminderService : IReminderService
             .Where(t => t.HasReminder
                         && t.ReminderTime <= now
                         && !t.IsCompleted
-                        && !t.ReminderSent) // ✅ Only unsent reminders
+                        && !t.ReminderSent) 
             .ToListAsync();
 
         _logger.LogInformation("{Count} tasks found for reminders", dueTasks.Count);

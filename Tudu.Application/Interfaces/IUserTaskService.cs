@@ -1,6 +1,4 @@
-﻿// Application/Interfaces/IUserTaskService.cs
-
-using Tudu.Application.Dtos;
+﻿using Tudu.Application.Dtos;
 
 namespace Tudu.Application.Interfaces;
 

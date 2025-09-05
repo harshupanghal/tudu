@@ -94,6 +94,7 @@
        
             try
             {
+                taskDto.CreatedAt = DateTime.Now;
                 await UserTaskService.CreateTaskAsync(taskDto, userId);
                   await Swal.FireAsync("Task added Successfully");
                 Navigation.NavigateTo("/tasks");

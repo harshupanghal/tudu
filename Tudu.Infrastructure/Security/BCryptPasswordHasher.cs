@@ -1,5 +1,4 @@
-﻿// Infrastructure/Security/BCryptPasswordHasher.cs
-using Application.Interfaces;
+﻿using Application.Interfaces;
 
 namespace Infrastructure.Security;
 

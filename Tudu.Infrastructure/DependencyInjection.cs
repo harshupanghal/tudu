@@ -1,5 +1,4 @@
-﻿// Infrastructure/DependencyInjection.cs
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Infrastructure.Security;
 using Microsoft.Extensions.DependencyInjection;
 using Tudu.Application.Interfaces;

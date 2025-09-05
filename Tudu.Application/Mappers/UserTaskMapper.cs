@@ -1,5 +1,5 @@
-﻿// Application/Mappers/UserTaskMappers.cs
-
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Tudu.Application.Dtos;
 using Tudu.Domain.Entities;
 
@@ -30,6 +30,7 @@ public static class UserTaskMappers
             Title = dto.Title,
             Description = dto.Description,
             DueDate = dto.DueDate,
+            CreatedAt = dto.CreatedAt,
             Category = dto.Category,
             HasReminder = dto.HasReminder,
             ReminderTime = dto.ReminderTime,

@@ -83,7 +83,7 @@
     private string? PreviewUrl;
     [SupplyParameterFromForm(FormName = RegiForm)]
     private RegisterRequest registerRequest { get; set; } = new();
-
+    private string uploadsDir => Path.Combine(Env.WebRootPath, "uploads");
     private string? Message;
     private string MessageClass = "alert-info";
     private bool isLoading = false;
@@ -140,28 +140,47 @@
         _cts.Dispose();
     }
 
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+private async Task HandleFileSelected(InputFileChangeEventArgs e)
+{
+    try
     {
-        try
+        var file = e.File;
+
+        // Safety check: file size limit (2 MB)
+        if (file.Size > 2_000_000)
         {
-            var file = e.File;
-            var resized = await file.RequestImageFileAsync(file.ContentType, 300, 300);
-            var buffer = new byte[resized.Size];
-            await resized.OpenReadStream(2_000_000).ReadAsync(buffer);
-
-            PreviewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
-
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
-            var savePath = Path.Combine(Env.WebRootPath, "uploads", fileName);
-
-            await using var fs = new FileStream(savePath, FileMode.Create);
-            await file.OpenReadStream(2_000_000).CopyToAsync(fs);
-
-            registerRequest.ProfilePicturePath = $"/uploads/{fileName}";
+            await Swal.FireAsync("Error", "File too large. Please upload under 2 MB.", "error");
+            return;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Image upload failed: " + ex.Message);
-        }
+
+        // Resize image for preview
+        var resized = await file.RequestImageFileAsync(file.ContentType, 300, 300);
+        var buffer = new byte[resized.Size];
+        await resized.OpenReadStream(2_000_000).ReadAsync(buffer);
+
+        PreviewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        // Save file to wwwroot/uploads
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
+        var savePath = Path.Combine(uploadsDir, fileName); // uploadsDir from Program.cs
+
+        await using var fs = new FileStream(savePath, FileMode.Create);
+        await file.OpenReadStream(2_000_000).CopyToAsync(fs);
+
+        // Store relative path for DB
+        registerRequest.ProfilePicturePath = $"/uploads/{fileName}";
     }
+    catch (IOException ioEx)
+    {
+        Console.WriteLine("File system error: " + ioEx.Message);
+        await Swal.FireAsync("Error", "Could not save file. Try again.", "error");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Image upload failed: " + ex);
+        await Swal.FireAsync("Error", "Unexpected error while uploading image.", "error");
+    }
+}
+
+
 }

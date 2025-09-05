@@ -1,6 +1,4 @@
-﻿// Domain/Entities/Task.cs
-
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Tudu.Domain.Entities;
 
 namespace Tudu.Domain.Entities;
@@ -16,9 +14,6 @@ public class UserTask
     public bool HasReminder { get; set; }
     public DateTime? ReminderTime { get; set; }
     public DateTime CreatedAt { get; set; }
-
-    // Foreign key to link tasks to a user
-    //[ForeignKey]
     public int UserId { get; set; }
     public User User { get; set; } = null!;
     public string? ReminderJobId { get; set; }        

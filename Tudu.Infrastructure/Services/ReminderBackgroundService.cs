@@ -33,7 +33,7 @@ public class ReminderBackgroundService : BackgroundService
                 _logger.LogError(ex, "Error sending reminders");
                 }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // check every minute
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); 
             }
         }
     }

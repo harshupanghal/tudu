@@ -1,8 +1,5 @@
-﻿// Application/Dtos/TaskDtos.cs
+﻿namespace Tudu.Application.Dtos;
 
-namespace Tudu.Application.Dtos;
-
-// DTO for creating a new task
 public class TaskCreateDto
     {
     public string Title { get; set; } = string.Empty;
@@ -14,7 +11,6 @@ public class TaskCreateDto
     public DateTime? ReminderTime { get; set; }
     }
 
-// DTO for updating an existing task
 public class TaskUpdateDto
     {
     public int Id { get; set; }
@@ -27,7 +23,6 @@ public class TaskUpdateDto
     public DateTime? ReminderTime { get; set; }
     }
 
-// DTO for displaying a task list
 public class TaskReadDto
     {
     public int Id { get; set; }

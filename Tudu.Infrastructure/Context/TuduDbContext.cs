@@ -8,11 +8,9 @@ public class TuduDbContext : DbContext
     public TuduDbContext(DbContextOptions<TuduDbContext> options)
         : base(options)
         {
-        // Ensure DB and tables are created at startup
         //Database.EnsureCreated();
         }
 
-    // DbSets for entities
     public DbSet<User> Users { get; set; }
     public DbSet<UserTask> UserTasks { get; set; }
 

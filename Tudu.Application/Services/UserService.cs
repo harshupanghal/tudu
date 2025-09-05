@@ -31,7 +31,7 @@ public class UserService : IUserService
         var user = new User
             {
             UserName = request.UserName,
-            Password = hashedPassword, // store hash instead of raw password
+            Password = hashedPassword, 
             ProfilePicturePath = request.ProfilePicturePath,
             Email = request.Email,
             CreatedAt = DateTime.UtcNow

@@ -1,6 +1,4 @@
-﻿// Application/Services/UserTaskService.cs
-
-using Tudu.Application.Dtos;
+﻿using Tudu.Application.Dtos;
 using Tudu.Application.Interfaces;
 using Tudu.Application.Mappers;
 using Tudu.Application.Validation;
@@ -36,7 +34,6 @@ public class UserTaskService : IUserTaskService
 
     public async Task<TaskReadDto> CreateTaskAsync(TaskCreateDto taskDto, int userId)
         {
-        // Validation
         var validationResult = _createValidator.Validate(taskDto);
         if (!validationResult.IsValid)
             {
@@ -51,7 +48,6 @@ public class UserTaskService : IUserTaskService
 
     public async Task<bool> UpdateTaskAsync(TaskUpdateDto taskDto, int userId)
         {
-        // Validation
         var validationResult = _updateValidator.Validate(taskDto);
         if (!validationResult.IsValid)
             {
