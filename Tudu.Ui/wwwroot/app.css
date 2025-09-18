@@ -456,3 +456,41 @@ input.checkbox-custom {
     border-radius: 4px;
     vertical-align: middle;
 }
+
+
+/* Hide native input */
+.file-input {
+    display: none;
+}
+
+/* Upload button */
+.upload-btn {
+    display: block;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--bg-primary);
+    background: var(--accent-secondary);
+    border: 1px solid var(--border-accent);
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    box-shadow: var(--shadow-sm);
+}
+
+    .upload-btn:hover {
+        background: var(--accent-secondary-hover);
+        box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+
+    .upload-btn:active {
+        transform: scale(0.97);
+    }
+
+    /* Optional: Bootstrap icon tweak */
+    .upload-btn i {
+        font-size: 1.1rem;
+        opacity: 0.85;
+    }

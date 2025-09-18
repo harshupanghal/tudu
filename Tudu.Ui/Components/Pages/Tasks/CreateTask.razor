@@ -57,9 +57,11 @@
             <div style="margin-bottom: 2rem;">
                 <label style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; display: block; font-size: 0.95rem;">Reminder Time</label>
                 <!-- Use a normal HTML input instead of InputDate -->
-                <input type="datetime-local"
-                       @bind="taskDto.ReminderTime"
-                       style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+               <input type="datetime-local"
+       value="@taskDto.ReminderTime?.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")"
+       @onchange="OnReminderChanged"
+       style="background: var(--glass-bg); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 0.875rem 1.25rem; color: var(--text-primary); font-size: 1rem; width: 100%;" />
+
             </div>
         }
 
@@ -84,13 +86,26 @@
         userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
     }
 
+    private void OnReminderChanged(ChangeEventArgs e)
+{
+    if (DateTime.TryParse(e.Value?.ToString(), out var local))
+    {
+        // Convert local → UTC for storage
+        taskDto.ReminderTime = DateTime.SpecifyKind(local, DateTimeKind.Local).ToUniversalTime();
+    }
+}
+
     private async Task HandleValidSubmit()
     {
-//     if (taskDto.ReminderTime.HasValue)
-// {
-//     taskDto.ReminderTime = taskDto.ReminderTime.Value.ToUniversalTime();
-// }
 
+            if (taskDto.ReminderTime.HasValue)
+{
+  
+    taskDto.ReminderTime = DateTime.SpecifyKind(
+        taskDto.ReminderTime.Value,
+        DateTimeKind.Local
+    ).ToUniversalTime();
+}
        
             try
             {

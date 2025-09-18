@@ -329,7 +329,7 @@
 @code {
     private IEnumerable<TaskReadDto>? tasks;
     private int userId;
-    private string? profilePicture;
+    // private string? profilePicture;
     private string? userName;
     private bool isLoading = true;
 
@@ -363,7 +363,7 @@
         if (user.Identity?.IsAuthenticated == true)
         {
             userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            profilePicture = user.FindFirst("ProfilePicture")?.Value;
+            // profilePicture = user.FindFirst("ProfilePicture")?.Value;
             userName = user.FindFirst(ClaimTypes.Name)?.Value;
             await LoadTasks();
         }

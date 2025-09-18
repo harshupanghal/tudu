@@ -46,10 +46,24 @@
             <ValidationMessage For="@(() => registerRequest.Password)" style="color: var(--accent-danger); font-size: 0.875rem;" />
         </div>
 
-        <div class="mb-3">
-            <label for="profilePic" class="form-label" style="color: var(--text-secondary);">Profile picture (optional)</label>
-            <InputFile id="profilePic" OnChange="HandleFileSelected" accept="image/*" aria-label="Upload profile picture" />
-        </div>
+      <div class="mb-3">
+    <label for="profilePic" class="form-label" style="color: var(--text-secondary);">
+        Profile picture (optional)
+    </label>
+
+    <!-- Hidden file input -->
+    <InputFile id="profilePic"
+               class="file-input"
+               OnChange="HandleFileSelected"
+               accept="image/*"
+               aria-label="Upload profile picture" />
+
+    <!-- Styled upload button -->
+    <label for="profilePic" class="upload-btn">
+        <i class="bi bi-upload"></i> Choose Image
+    </label>
+</div>
+
 
         @if (!string.IsNullOrEmpty(PreviewUrl))
         {
